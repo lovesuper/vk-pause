@@ -10,6 +10,7 @@
   },
 
   "content_security_policy": "script-src 'self' https://vk.com; object-src 'self'",
+
   "permissions": [
     "storage",
     "tabs",
@@ -17,9 +18,19 @@
     "https://*/*"
   ],
 
- "web_accessible_resources": [
-   "images/*"
- ],
+  "commands": {
+    "startStop": {
+      "suggested_key": {
+        "default": "Ctrl+Shift+M",
+        "mac": "Command+Shift+M"
+      },
+      "description": "Start/stop vk music"
+    }
+  },
+
+  "web_accessible_resources": [
+    "images/*"
+  ],
 
   "background": {
     "scripts": [

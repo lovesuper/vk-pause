@@ -1,7 +1,5 @@
 // background script
-
-chrome.browserAction.onClicked.addListener(function(tab) {
-  console.log("[VK-Pause] ext clicked!");
+function startStop() {
   chrome.tabs.query({url: "https://vk.com/*", lastFocusedWindow: true }, function(tabs) {
     chrome.tabs.sendMessage(tabs[0].id, {cmd: "changeMode"}, function(response) {
       console.log(response.result);
@@ -11,4 +9,16 @@ chrome.browserAction.onClicked.addListener(function(tab) {
       });
     });
   });
+}
+
+chrome.browserAction.onClicked.addListener(function(tab) {
+  console.log("[VK-Pause] ext clicked!");
+  startStop();
+});
+
+chrome.commands.onCommand.addListener(function(command) {
+  console.log('Command:', command);
+  if (command == "startStop") {
+    startStop()
+  }
 });
