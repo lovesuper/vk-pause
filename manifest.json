@@ -1,0 +1,48 @@
+{
+  "manifest_version": 2,
+  "name": "VK-Pause",
+  "version": "0.1",
+  "icons": {
+    "16": "images/icons/16x16.png",
+    "32": "images/icons/32x32.png",
+    "48": "images/icons/48x48.png",
+    "128": "images/icons/128x128.png"
+  },
+
+  "content_security_policy": "script-src 'self' https://vk.com; object-src 'self'",
+  "permissions": [
+    "storage",
+    "tabs"
+  ],
+
+  // "optional_permissions": [],
+
+ "web_accessible_resources": [
+   "images/*"
+ ],
+
+  "background": {
+    "scripts": [
+      "src/background.js",
+      "lib/jquery-2.1.4.js",
+      "lib/client.js"
+    ],
+    "persistent": true
+  },
+
+  "browser_action": {
+    "default_title": "VK-Pause"
+  },
+
+  "content_scripts": [
+    {
+      "matches": [
+        "https://vk.com/*"
+      ],
+      "js": [
+        "lib/jquery-2.1.4.js",
+        "src/content.js"
+      ]
+    }
+  ]
+}
