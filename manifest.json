@@ -33,6 +33,7 @@
   "background": {
     "scripts": [
       "src/background.js",
+      "lib/constants.js",
       "lib/jquery-2.1.4.js"
     ],
     "persistent": true
@@ -50,6 +51,7 @@
       ],
       "js": [
         "lib/jquery-2.1.4.js",
+        "lib/constants.js",
         "src/content.js"
       ]
     }
