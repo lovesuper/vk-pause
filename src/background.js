@@ -1,6 +1,6 @@
 // background script
 function startStop() {
-  chrome.tabs.query({url: "https://vk.com/*", lastFocusedWindow: true }, function(tabs) {
+  chrome.tabs.query({url: "*://vk.com/*", lastFocusedWindow: true }, function(tabs) {
     chrome.tabs.sendMessage(tabs[0].id, {cmd: "changeMode"}, function(response) {
       console.log(response.result);
       chrome.storage.local.get('isPlaying', function (result) {

@@ -9,13 +9,13 @@
     "128": "images/icons/play/128.png"
   },
 
-  "content_security_policy": "script-src 'self' https://vk.com; object-src 'self'",
+  // "content_security_policy": "script-src 'self' https://vk.com; object-src 'self'",
 
   "permissions": [
     "storage",
     "tabs",
-    "http://*/*",
-    "https://*/*"
+    "http://vk.com/*",
+    "https://vk.com/*"
   ],
 
   "commands": {
@@ -47,7 +47,8 @@
   "content_scripts": [
     {
       "matches": [
-        "https://vk.com/*"
+        "https://vk.com/*",
+        "http://vk.com/*"
       ],
       "js": [
         "lib/jquery-2.1.4.js",
