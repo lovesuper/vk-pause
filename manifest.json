@@ -21,8 +21,8 @@
   "commands": {
     "startStop": {
       "suggested_key": {
-        "default": "Ctrl+Shift+M",
-        "mac": "Command+Shift+M"
+        "default": "Ctrl+Shift+I",
+        "mac": "Command+Shift+I"
       },
       "description": "Start/stop vk music"
     }
