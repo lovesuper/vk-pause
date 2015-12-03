@@ -19,8 +19,8 @@
   "commands": {
     "switchState": {
       "suggested_key": {
-        "default": "Ctrl+Shift+I",
-        "mac": "Command+Shift+I"
+        "default": "Alt+N",
+        "mac": "Alt+N"
       },
       "description": "Start/stop vk music"
     }
