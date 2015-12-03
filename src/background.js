@@ -12,13 +12,25 @@ chrome.commands.onCommand.addListener(function(hotkey) {
 
 function switchState() {
   chrome.tabs.query({url: "*://vk.com/*", lastFocusedWindow: true}, function(tabs) {
-    tabs.forEach(function(tab) {
-      console.log("<VK-Pause> Sending command 'switchState' to tab " + tab.id);
-      chrome.tabs.sendMessage(tab.id, {cmd: COMMANDS.switchState.value}, function(response) {
-        console.log("<VK-Pause> Extension has recieved response from content script. State is '" + response.newState.value + "'");
-        switchIconState(response.newState);
+    if (tabs.length) {
+      tabs.forEach(function(tab) {
+        console.log("<VK-Pause> Sending command 'switchState' to tab " + tab.id);
+        chrome.tabs.sendMessage(tab.id, {cmd: COMMANDS.switchState}, function(response) {
+          console.log("<VK-Pause> Extension has recieved response from content script. State is '" + response.newState.value + "'");
+          switchIconState(response.newState);
+        });
       });
-    });
+    } else {
+       console.log("<VK-Pause> No VKs was found. Open new one");
+       chrome.tabs.create({ url: "https://vk.com", active: true, index: 0 }, function(tab) {
+         var tabId = tab.id;
+         chrome.tabs.onUpdated.addListener(function(tabId, info) {
+           if (info.status == "complete") {
+             switchState();
+           }
+         });
+      });
+    }
   });
 }
 

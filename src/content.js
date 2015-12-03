@@ -23,10 +23,10 @@ function reportPlayingState(playingState) {
 }
 
 function getPlayingState() {
-  var btnClass = $("#ac_play").attr("class");
-  if(btnClass == "fl_l" || btnClass == "fl_l over") {
+  var btnClass = $("#head_play_btn").attr("class");
+  if(btnClass == "" || btnClass == "over") {
     return STATES.paused;
-  } else if(btnClass == "fl_l playing" || btnClass == "fl_l over playing") {
+  } else if(btnClass == "playing" || btnClass == "playing over") {
     return STATES.playing;
   }
 
@@ -35,9 +35,9 @@ function getPlayingState() {
 
 chrome.runtime.onMessage.addListener(function(request, sender, sendResponse) {
   console.log("<VK-Pause> Background message has recieved")
-  if (request.cmd == COMMANDS.switchState.value) {
+  if (request.cmd.value == COMMANDS.switchState.value) {
     console.log("<VK-Pause> Clicking on playStop button")
-    $("#ac_play").click();
+    $("#head_play_btn").click();
     var state = getPlayingState();
     console.log("<VK-Pause> Sending back new state")
     sendResponse({newState: state});
