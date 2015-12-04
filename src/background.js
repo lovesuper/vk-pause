@@ -43,7 +43,7 @@ function spreadStateToTabs(state) {
         });
       });
     } else {
-      // startNewVK();
+      startNewVK();
     }
   });
 }
@@ -52,7 +52,7 @@ function startNewVK() {
   console.log("<VK-Pause> Opening new VK");
   chrome.tabs.create({ url: "https://vk.com", active: true, index: 0 }, function(tab) {
     var tabId = tab.id;
-    chrome.tabs.onUpdated.addListener(function(tabId, info) { if (info.status == "complete") {switchState(); }
+    chrome.tabs.onUpdated.addListener(function(tabId, info) { if (info.status == "complete") { switchState(); }
     });
   });
 }
