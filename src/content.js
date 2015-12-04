@@ -6,9 +6,10 @@ $(document).ready(function () {
     var className = mutations[0].target.className;
     switch (className) {
       case "playing":
-        reportPlayingState(STATES.playing);
-      case "":
         reportPlayingState(STATES.paused);
+        break;
+      case "":
+        reportPlayingState(STATES.playing);
       // case "playing over down":
       // case "playing over":
     }
