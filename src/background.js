@@ -1,25 +1,15 @@
-chrome.browserAction.onClicked.addListener(function(tab) {
-  console.log("<VK-Pause> App icon has been clicked");
-  switchState();
-});
+chrome.browserAction.onClicked.addListener(function(tab) { switchState(); });
 
 chrome.commands.onCommand.addListener(function(hotkey) {
-  if (hotkey == HOTKEYS.switchState.value) {
-    console.log("<VK-Pause> Extension hotkey 'switchState' has been pressed")
-    switchState();
-  }
+  if(hotkey == "switchState") { switchState(); }
 });
 
 chrome.runtime.onMessage.addListener(function(request, sender, sendResponse) {
-  console.log("<VK-Pause> Background has recieved request. State is '" + request.state.value + "'");
   setAppIconState(request.state);
-  sendResponse({result: "ok"});
 });
 
 function setAppIconState(state) {
-  console.log("<VK-Pause> Changing icon to " + state.value);
-  var iconPath = "images/icons/" + state.value + "/32.png"
-  chrome.browserAction.setIcon({ path: iconPath });
+  chrome.browserAction.setIcon({ path: "images/icons/" + state.value + "/48.png" });
 }
 
 function switchState() {
@@ -37,10 +27,7 @@ function spreadStateToTabs(state) {
   chrome.tabs.query({url: "*://vk.com/*", lastFocusedWindow: true}, function(vkTabs) {
     if (vkTabs.length) {
       vkTabs.forEach(function(tab) {
-        console.log("<VK-Pause> Sending command 'switchState' to tab " + tab.id);
-        chrome.tabs.sendMessage(tab.id, {cmd: COMMANDS.switchState}, function(response) {
-          console.log("<VK-Pause> Extension has recieved response from content script. OK");
-        });
+        chrome.tabs.sendMessage(tab.id, {cmd: COMMANDS.switchState}, function(response) {});
       });
     } else {
       startNewVK();
@@ -49,7 +36,6 @@ function spreadStateToTabs(state) {
 }
 
 function startNewVK() {
-  console.log("<VK-Pause> Opening new VK");
   chrome.tabs.create({ url: "https://vk.com", active: true, index: 0 }, function(tab) {
     var tabId = tab.id;
     chrome.tabs.onUpdated.addListener(function(tabId, info) { if (info.status == "complete") { switchState(); }
