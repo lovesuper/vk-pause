@@ -49,17 +49,20 @@ function spreadStateToTabs(state) {
   });
 }
 
+function completeListener(tabId, info, tab) {
+  if (info.status == "complete" && tab.url.indexOf("vk.com") > -1) {
+    switchState();
+    chrome.tabs.onUpdated.removeListener(completeListener);
+  }
+}
+
 function startNewVkTab() {
   chrome.tabs.create({
     url: "https://vk.com",
     active: true,
     index: 0
   }, function(tab) {
-    var tabId = tab.id;
-    chrome.tabs.onUpdated.addListener(function(tabId, info, tab) {
-      if (info.status == "complete" && tab.url.indexOf("vk.com") > -1) {
-        switchState();
-      }
-    });
+    chrome.tabs.onUpdated.addListener(completeListener);
   });
 }
+
