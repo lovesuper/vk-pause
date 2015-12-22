@@ -34,14 +34,15 @@ function switchState() {
 
 function spreadStateToTabs(state) {
   chrome.tabs.query({
-    url: "*://vk.com/*",
-    lastFocusedWindow: true
+    url: "*://vk.com/*"
   }, function(vkTabs) {
     if (vkTabs.length) {
       vkTabs.forEach(function(tab) {
-        chrome.tabs.sendMessage(tab.id, {
-          cmd: COMMANDS.switchState
-        }, function(response) {});
+        if(tab.audible) {
+          chrome.tabs.sendMessage(tab.id, {
+            cmd: COMMANDS.switchState
+          }, function(response) {});
+        }
       });
     } else {
       startNewVkTab();
