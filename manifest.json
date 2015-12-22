@@ -48,7 +48,7 @@
         "http://vk.com/*"
       ],
       "js": [
-        "lib/jquery-2.1.4.min.js",
+        "lib/jquery-2.1.4.js",
         "lib/constants.js",
         "src/content.js"
       ]
