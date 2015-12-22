@@ -1,7 +1,7 @@
 {
   "manifest_version": 2,
   "name": "VK-Pause",
-  "short_name": "VK-Pause",
+  "short_name": "vk-pause",
   "version": "0.2",
   "icons": {
     "16": "images/icons/play/16.png",
