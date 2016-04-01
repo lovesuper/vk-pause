@@ -2,7 +2,7 @@
   "manifest_version": 2,
   "name": "VK-Pause",
   "short_name": "vk-pause",
-  "version": "0.3",
+  "version": "0.4",
   "icons": {
     "16": "images/icons/play/16.png",
     "32": "images/icons/play/32.png",
@@ -14,7 +14,9 @@
     "storage",
     "tabs",
     "http://vk.com/*",
-    "https://vk.com/*"
+    "https://vk.com/*",
+    "http://new.vk.com/*",
+    "https://new.vk.com/*"
   ],
 
   "commands": {
@@ -45,7 +47,9 @@
     {
       "matches": [
         "https://vk.com/*",
-        "http://vk.com/*"
+        "https://new.vk.com/*",
+        "http://vk.com/*",
+        "http://new.vk.com/*"
       ],
       "js": [
         "lib/jquery-2.1.4.js",

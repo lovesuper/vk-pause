@@ -15,8 +15,13 @@ function switchPlayingState() {
     newState = Boolean(result.isPlaying) ? COMMANDS.setToStop : COMMANDS.setToPlay;
     chrome.storage.local.set({ 'isPlaying': !result.isPlaying }, function() {
       chrome.tabs.query({ url: "*://vk.com/*" }, function(vkTabs) {
-          if(vkTabs.length) setNewStateToLastPlayedTab(newState);
-          else startNewVkTab();
+        chrome.tabs.query({ url: "*://new.vk.com/*" }, function(newVkTabs) {
+          if((vkTabs && vkTabs.length) || (newVkTabs && newVkTabs.length)) {
+            setNewStateToLastPlayedTab(newState);
+          } else {
+            startNewVkTab();
+          }
+        });
       });
     });
   });
@@ -29,7 +34,7 @@ function startNewVkTab() {
 }
 
 function completeListener(tabId, info, tab) {
-  if(info.status == "complete" && tab.url.indexOf("vk.com") > -1) {
+  if(info.status == "complete" && (tab.url.indexOf("vk.com") > -1 || tab.url.indexOf("new.vk.com") > -1)) {
     chrome.storage.local.set({ 'lastPlayedTabId': tab.id }, function() {
       switchPlayingState();
     });
@@ -43,12 +48,21 @@ function setAppIconState(state) {
 
 function setNewStateToLastPlayedTab(newState) {
   chrome.storage.local.get('lastPlayedTabId', function(result) {
-      chrome.tabs.query({ url: "*://vk.com/*" }, function(vkTabs) {
-        vkTabs.forEach(function(tab) {
-          if(tab.id == result.lastPlayedTabId) setTabToNewState(tab.id, newState);
-          else if(tab.audible) setTabToNewState(tab.id. COMMANDS.setToStop);
-        });
+    chrome.tabs.query({ url: "*://vk.com/*" }, function(vkTabs) {
+      chrome.tabs.query({ url: "*://new.vk.com/*" }, function(newVkTabs) {
+        if((vkTabs && vkTabs.length) ) {
+          vkTabs.forEach(function(tab) {
+            if(tab.id == result.lastPlayedTabId) setTabToNewState(tab.id, newState);
+            else if(tab.audible) setTabToNewState(tab.id. COMMANDS.setToStop);
+          });
+        } else if (newVkTabs && newVkTabs.length) {
+          newVkTabs.forEach(function(tab) {
+            if(tab.id == result.lastPlayedTabId) setTabToNewState(tab.id, newState);
+            else if(tab.audible) setTabToNewState(tab.id. COMMANDS.setToStop);
+          });
+        }
       });
+    });
   });
 }
 
