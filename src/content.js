@@ -5,15 +5,23 @@ $(document).ready(function() {
   if (target) {
     var observer = new MutationObserver(function(mutations, observer) {
       var className = mutations[0].target.className;
-      if(className == "playing") { reportPlayingState(STATES.paused); }
-      else if (className == "") { reportPlayingState(STATES.playing); }
+      if(className == "playing") {
+        reportPlayingState(STATES.paused);
+      }
+      else if (className == "") {
+        reportPlayingState(STATES.playing);
+      }
     });
     observer.observe(target, { subtree: true, attributes: true });
   } else if(newTarget) {
     var observer = new MutationObserver(function(mutations, observer) {
       var className = mutations[0].target.className;
-      if(className == "top_audio_player top_audio_player_enabled") { reportPlayingState(STATES.playing); }
-      else if (className == "top_audio_player top_audio_player_enabled top_audio_player_playing") { reportPlayingState(STATES.paused); }
+      if(className == "top_audio_player top_audio_player_enabled") {
+        reportPlayingState(STATES.playing);
+      }
+      else if (className == "top_audio_player top_audio_player_enabled top_audio_player_playing") {
+        reportPlayingState(STATES.paused);
+      }
     });
     observer.observe(newTarget, { subtree: true, attributes: true });
   }
@@ -32,8 +40,10 @@ chrome.runtime.onMessage.addListener(function(request, sender, sendResponse) {
     } else if (newClassName) {
     $(".top_audio_player_playing").click();
     }
-  } else {
+  } else if (COMMANDS.setToStop) {
     $("#head_play_btn").click();
     $(".top_audio_player_play").click();
+  } else if (COMMANDS.setToNext) {
+    $(".audio_page_player_ctrl audio_page_player_next").click();
   }
 });
