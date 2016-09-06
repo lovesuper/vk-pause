@@ -2,7 +2,8 @@
   "manifest_version": 2,
   "name": "VK-Pause",
   "short_name": "vk-pause",
-  "version": "0.4",
+  "version": "0.5",
+  "offline_enabled": true,
   "icons": {
     "16": "images/icons/play/16.png",
     "32": "images/icons/play/32.png",
@@ -55,7 +56,8 @@
         "lib/jquery-2.1.4.js",
         "lib/constants.js",
         "src/content.js"
-      ]
+      ],
+      "run_at":"document_end"
     }
   ]
 }

@@ -32,7 +32,7 @@ function reportPlayingState(playingState) {
 }
 
 chrome.runtime.onMessage.addListener(function(request, sender, sendResponse) {
-  if(request.cmd == COMMANDS.setToPlay) {
+  if(request.cmd.value == COMMANDS.setToPlay.value) {
     var className = $("#head_play_btn").attr("class");
     var newClassName = $(".top_audio_player_play");
     if(className != "playing"){
@@ -40,10 +40,14 @@ chrome.runtime.onMessage.addListener(function(request, sender, sendResponse) {
     } else if (newClassName) {
     $(".top_audio_player_playing").click();
     }
-  } else if (COMMANDS.setToStop) {
+    sendResponse({"state":STATES.playing});
+  } else if (request.cmd.value == COMMANDS.setToStop.value) {
     $("#head_play_btn").click();
     $(".top_audio_player_play").click();
-  } else if (COMMANDS.setToNext) {
-    $(".audio_page_player_ctrl audio_page_player_next").click();
+    sendResponse({"state":STATES.paused});
+  } else if (request.cmd.value == COMMANDS.setToNext.value) {
+    $(".top_audio_player_next").click()
+    console.log("next song DONE")
+    sendResponse({"state":STATES.playing});
   }
 });
