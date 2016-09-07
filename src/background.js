@@ -2,13 +2,13 @@ function iconClicked() {
   var currentTimestamp = (new Date()).getTime();
   chrome.storage.local.get('clickTimestamp', function(result) {
     if (result.clickTimestamp != undefined) {
-      if (currentTimestamp - result.clickTimestamp < 400) {
+      if (currentTimestamp - result.clickTimestamp < 250) {
         goNextSong();
-        console.log("go next")
       } else {
-        console.log("switch")
         switchPlayingState();
       }
+    } else {
+        switchPlayingState();
     }
     chrome.storage.local.set({ 'clickTimestamp': currentTimestamp}, function() { });
   });
@@ -34,7 +34,7 @@ chrome.runtime.onMessage.addListener(function(request, sender, sendResponse) {
 
 function switchPlayingState() {
   chrome.storage.local.get('isPlaying', function(result) {
-    newState = Boolean(result.isPlaying) ? COMMANDS.setToStop : COMMANDS.setToPlay;
+    newState = !Boolean(result.isPlaying) ? COMMANDS.setToStop : COMMANDS.setToPlay;
     chrome.storage.local.set({ 'isPlaying': !result.isPlaying }, function() {
       chrome.tabs.query({ url: "*://vk.com/*" }, function(vkTabs) {
         chrome.tabs.query({ url: "*://new.vk.com/*" }, function(newVkTabs) {
@@ -60,7 +60,7 @@ function goNextSong() {
                 vkTabs.forEach(function(tab) {
                   if(tab.id == result.lastPlayedTabId) {
                     chrome.tabs.sendMessage(tab.id, { cmd: COMMANDS.setToNext }, function(response) {
-                      setAppIconState(STATES.playing);
+                      setAppIconState(STATES.paused);
                     });
                   }
                 });
@@ -95,6 +95,7 @@ function setAppIconState(state) {
 }
 
 function setNewStateToLastPlayedTab(newState) {
+  console.log("go new state:", newState)
   chrome.storage.local.get('lastPlayedTabId', function(result) {
     chrome.tabs.query({ url: "*://vk.com/*" }, function(vkTabs) {
       chrome.tabs.query({ url: "*://new.vk.com/*" }, function(newVkTabs) {
@@ -125,8 +126,7 @@ function setNewStateToLastPlayedTab(newState) {
 function setTabToNewState(tabId, newState) {
   chrome.tabs.sendMessage(tabId, { cmd: newState }, function(response) {
     chrome.storage.local.set({ 'lastPlayedTabId': tabId }, function() {
-      //setAppIconState(response.state);
-      setAppIconState(STATES.playing);
+      setAppIconState(response.state);
     });
   });
 }

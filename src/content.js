@@ -32,22 +32,26 @@ function reportPlayingState(playingState) {
 }
 
 chrome.runtime.onMessage.addListener(function(request, sender, sendResponse) {
+  console.log(request.cmd.value);
   if(request.cmd.value == COMMANDS.setToPlay.value) {
+    console.log("setting play state");
     var className = $("#head_play_btn").attr("class");
     var newClassName = $(".top_audio_player_play");
     if(className != "playing"){
-      $("#head_play_btn").click();
+      // $("#head_play_btn").click();
+      $(".top_audio_player_btn_icon").click();
     } else if (newClassName) {
-    $(".top_audio_player_playing").click();
+      $(".top_audio_player_playing").click();
     }
     sendResponse({"state":STATES.playing});
   } else if (request.cmd.value == COMMANDS.setToStop.value) {
-    $("#head_play_btn").click();
+    console.log("setting stop state");
+    // $("#head_play_btn").click();
     $(".top_audio_player_play").click();
     sendResponse({"state":STATES.paused});
   } else if (request.cmd.value == COMMANDS.setToNext.value) {
+    console.log("setting new song");
     $(".top_audio_player_next").click()
-    console.log("next song DONE")
     sendResponse({"state":STATES.playing});
   }
 });
