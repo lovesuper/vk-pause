@@ -28,13 +28,11 @@ $(document).ready(function() {
 });
 
 function reportPlayingState(playingState) {
-  chrome.runtime.sendMessage({ state: playingState }, function(response) {});
+  chrome.runtime.sendMessage({ pState: playingState }, function(response) {});
 }
 
 chrome.runtime.onMessage.addListener(function(request, sender, sendResponse) {
-  console.log(request.cmd.value);
   if(request.cmd.value == COMMANDS.setToPlay.value) {
-    console.log("setting play state");
     var className = $("#head_play_btn").attr("class");
     var newClassName = $(".top_audio_player_play");
     if(className != "playing"){
@@ -43,15 +41,14 @@ chrome.runtime.onMessage.addListener(function(request, sender, sendResponse) {
     } else if (newClassName) {
       $(".top_audio_player_playing").click();
     }
-    sendResponse({"state":STATES.playing});
+    sendResponse({"state":STATES.paused});
   } else if (request.cmd.value == COMMANDS.setToStop.value) {
-    console.log("setting stop state");
     // $("#head_play_btn").click();
     $(".top_audio_player_play").click();
-    sendResponse({"state":STATES.paused});
+    sendResponse({"state":STATES.playing});
   } else if (request.cmd.value == COMMANDS.setToNext.value) {
-    console.log("setting new song");
     $(".top_audio_player_next").click()
     sendResponse({"state":STATES.playing});
   }
 });
+

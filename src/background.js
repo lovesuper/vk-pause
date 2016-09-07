@@ -26,8 +26,8 @@ chrome.commands.onCommand.addListener(function(hotkey) {
 
 chrome.runtime.onMessage.addListener(function(request, sender, sendResponse) {
   chrome.storage.local.set({ 'lastPlayedTabId': sender.tab.id }, function() {
-    chrome.storage.local.set({ 'isPlaying': request.state == STATES.playing }, function() {
-      setAppIconState(request.state);
+    chrome.storage.local.set({ 'isPlaying': request.pState.value == STATES.playing.value }, function() {
+      setAppIconState(request.pState);
     });
   });
 });
@@ -95,7 +95,6 @@ function setAppIconState(state) {
 }
 
 function setNewStateToLastPlayedTab(newState) {
-  console.log("go new state:", newState)
   chrome.storage.local.get('lastPlayedTabId', function(result) {
     chrome.tabs.query({ url: "*://vk.com/*" }, function(vkTabs) {
       chrome.tabs.query({ url: "*://new.vk.com/*" }, function(newVkTabs) {
