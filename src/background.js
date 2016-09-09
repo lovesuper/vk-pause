@@ -101,8 +101,7 @@ function setNewStateToLastPlayedTab(newState) {
           vkTabs.forEach(function(tab) {
             if(tab.id == result.lastPlayedTabId) {
               setTabToNewState(tab.id, newState);
-            }
-            else if(tab.audible) {
+            } else if(tab.audible) {
               setTabToNewState(tab.id, COMMAND.setToPause.value);
             }
           });
@@ -110,8 +109,7 @@ function setNewStateToLastPlayedTab(newState) {
           newVkTabs.forEach(function(tab) {
             if(tab.id == result.lastPlayedTabId){
               setTabToNewState(tab.id, newState);
-            }
-            else if(tab.audible){
+            } else if(tab.audible){
               setTabToNewState(tab.id, COMMAND.setToPause.value);
             }
           });
