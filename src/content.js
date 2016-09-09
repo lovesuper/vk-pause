@@ -38,7 +38,7 @@ function reportPlayingState(playingState) {
 }
 
 chrome.runtime.onMessage.addListener(function(request, sender, sendResponse) {
-  if(request.cmd.value == COMMAND.setToPlay.value) {
+  if(request.cmd == COMMAND.setToPlay.value) {
     var className = $(OLD_VK_SEL.playstop.value).attr("class");
     var newClassName = $(NEW_VK_SEL.play.value);
     if(className != OLD_VK_SEL.playingFlag.value){
@@ -51,13 +51,13 @@ chrome.runtime.onMessage.addListener(function(request, sender, sendResponse) {
     return;
   }
 
-  if (request.cmd.value == COMMAND.setToPause.value) {
+  if (request.cmd == COMMAND.setToPause.value) {
     $(NEW_VK_SEL.play.value).click();
     sendResponse({ "state" : STATE.playing.value});
     return;
   }
 
-  if (request.cmd.value == COMMAND.setToNext.value) {
+  if (request.cmd == COMMAND.setToNext.value) {
     $(NEW_VK_SEL.next.value).click()
     sendResponse({ "state" : STATE.playing.value});
     return;

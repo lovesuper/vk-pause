@@ -52,14 +52,13 @@ function nextAudioTrack() {
   chrome.tabs.query({ url: URL.oldVkUrl.value}, function(vkTabs) {
     chrome.tabs.query({ url: URL.newVkUrl.value}, function(newVkTabs) {
       if((vkTabs && vkTabs.length) || (newVkTabs && newVkTabs.length)) {
-        chrome.storage.local.get("lastTabPlayedId", function(result) {
+        chrome.storage.local.get("lastPlayedTabId", function(result) {
           chrome.tabs.query({ url: URL.oldVkUrl.value}, function(vkTabs) {
             chrome.tabs.query({ url: URL.newVkUrl.value}, function(newVkTabs) {
               if((vkTabs && vkTabs.length) ) {
                 vkTabs.forEach(function(tab) {
                   if(tab.id == result.lastPlayedTabId) {
                     chrome.tabs.sendMessage(tab.id, { cmd: COMMAND.setToNext.value }, function(response) {
-                      debugger;
                       setAppIconState(STATE.paused.value);
                     });
                   }
