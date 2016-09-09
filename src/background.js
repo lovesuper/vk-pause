@@ -1,66 +1,66 @@
-function iconClicked() {
-  var currentTimestamp = (new Date()).getTime();
-  chrome.storage.local.get('clickTimestamp', function(result) {
-    if (result.clickTimestamp != undefined) {
-      if (currentTimestamp - result.clickTimestamp < 250) {
-        goNextSong();
-      } else {
-        switchPlayingState();
-      }
-    } else {
-        switchPlayingState();
-    }
-    chrome.storage.local.set({ 'clickTimestamp': currentTimestamp}, function() { });
-  });
-}
-
 chrome.browserAction.onClicked.addListener(function(tab) {
-  iconClicked();
+  appIconClicked();
 });
 
 chrome.commands.onCommand.addListener(function(hotkey) {
-  if(hotkey == "switchState"){
-    iconClicked();
+  if (hotkey == HOTKEY.main.value) {
+    appIconClicked();
   }
 });
 
 chrome.runtime.onMessage.addListener(function(request, sender, sendResponse) {
-  chrome.storage.local.set({ 'lastPlayedTabId': sender.tab.id }, function() {
-    chrome.storage.local.set({ 'isPlaying': request.pState.value == STATES.playing.value }, function() {
-      setAppIconState(request.pState);
+  chrome.storage.local.set({ lastPlayedTabId: sender.tab.id }, function() {
+    var isPlayingBundle = { "isPlaying": request.state.value == STATE.playing.value };
+    chrome.storage.local.set(isPlayingBundle, function() {
+      setAppIconState(request.state);
     });
   });
 });
 
+function appIconClicked() {
+  var currentTimestamp = (new Date()).getTime();
+  chrome.storage.local.get("lastTimeClicked", function(result) {
+    if (result.lastTimeClicked && currentTimestamp - result.lastTimeClicked < DOUBLE_CLICK_MILLS) {
+        nextAudioTrack();
+    } else {
+        switchPlayingState();
+    }
+    // null???
+    chrome.storage.local.set({ "lastTimeClicked": currentTimestamp }, function() {});
+  });
+}
+
 function switchPlayingState() {
-  chrome.storage.local.get('isPlaying', function(result) {
-    newState = !Boolean(result.isPlaying) ? COMMANDS.setToStop : COMMANDS.setToPlay;
-    chrome.storage.local.set({ 'isPlaying': !result.isPlaying }, function() {
-      chrome.tabs.query({ url: "*://vk.com/*" }, function(vkTabs) {
-        chrome.tabs.query({ url: "*://new.vk.com/*" }, function(newVkTabs) {
+  chrome.storage.local.get("isPlaying", function(result) {
+    newPlayingState = Boolean(result.isPlaying) ? COMMAND.setToPlay : COMMAND.setToPause;
+    chrome.storage.local.set({ isPlaying: !result.isPlaying }, function() {
+      chrome.tabs.query({ url: URL.oldVkUrl.value }, function(vkTabs) {
+        chrome.tabs.query({ url: URL.newVkUrl.value}, function(newVkTabs) {
           if((vkTabs && vkTabs.length) || (newVkTabs && newVkTabs.length)) {
-            setNewStateToLastPlayedTab(newState);
+            setNewStateToLastPlayedTab(newPlayingState);
           } else {
             startNewVkTab();
           }
         });
       });
+
     });
   });
 }
 
-function goNextSong() {
-  chrome.tabs.query({ url: "*://vk.com/*" }, function(vkTabs) {
-    chrome.tabs.query({ url: "*://new.vk.com/*" }, function(newVkTabs) {
+function nextAudioTrack() {
+  chrome.tabs.query({ url: URL.oldVkUrl.value}, function(vkTabs) {
+    chrome.tabs.query({ url: URL.newVkUrl.value}, function(newVkTabs) {
       if((vkTabs && vkTabs.length) || (newVkTabs && newVkTabs.length)) {
-        chrome.storage.local.get('lastPlayedTabId', function(result) {
-          chrome.tabs.query({ url: "*://vk.com/*" }, function(vkTabs) {
-            chrome.tabs.query({ url: "*://new.vk.com/*" }, function(newVkTabs) {
+        chrome.storage.local.get("lastTabPlayedId", function(result) {
+          chrome.tabs.query({ url: URL.oldVkUrl.value}, function(vkTabs) {
+            chrome.tabs.query({ url: URL.newVkUrl.value}, function(newVkTabs) {
               if((vkTabs && vkTabs.length) ) {
                 vkTabs.forEach(function(tab) {
                   if(tab.id == result.lastPlayedTabId) {
-                    chrome.tabs.sendMessage(tab.id, { cmd: COMMANDS.setToNext }, function(response) {
-                      setAppIconState(STATES.paused);
+                    chrome.tabs.sendMessage(tab.id, { cmd: COMMAND.setToNext.value }, function(response) {
+                      debugger;
+                      setAppIconState(STATE.paused.value);
                     });
                   }
                 });
@@ -76,14 +76,14 @@ function goNextSong() {
 }
 
 function startNewVkTab() {
-  chrome.tabs.create({ url: "https://vk.com", active: true, index: 0 }, function(tab) {
+  chrome.tabs.create({ url: SSL_VK_URL, active: true, index: 0 }, function(tab) {
     chrome.tabs.onUpdated.addListener(completeListener);
   });
 }
 
 function completeListener(tabId, info, tab) {
   if(info.status == "complete" && (tab.url.indexOf("vk.com") > -1 || tab.url.indexOf("new.vk.com") > -1)) {
-    chrome.storage.local.set({ 'lastPlayedTabId': tab.id }, function() {
+    chrome.storage.local.set({ "lastPlayedTabId" : tab.id }, function() {
       switchPlayingState();
     });
     chrome.tabs.onUpdated.removeListener(completeListener);
@@ -91,20 +91,20 @@ function completeListener(tabId, info, tab) {
 }
 
 function setAppIconState(state) {
-  chrome.browserAction.setIcon({ path: "images/icons/" + state.value + "/48.png" });
+  chrome.browserAction.setIcon({ path: "images/icons/" + state + "/48.png" });
 }
 
 function setNewStateToLastPlayedTab(newState) {
-  chrome.storage.local.get('lastPlayedTabId', function(result) {
-    chrome.tabs.query({ url: "*://vk.com/*" }, function(vkTabs) {
-      chrome.tabs.query({ url: "*://new.vk.com/*" }, function(newVkTabs) {
+  chrome.storage.local.get("lastPlayedTabId", function(result) {
+    chrome.tabs.query({ url: URL.oldVkUrl.value }, function(vkTabs) {
+      chrome.tabs.query({ url: URL.newVkUrl.value }, function(newVkTabs) {
         if((vkTabs && vkTabs.length) ) {
           vkTabs.forEach(function(tab) {
             if(tab.id == result.lastPlayedTabId) {
               setTabToNewState(tab.id, newState);
             }
             else if(tab.audible) {
-              setTabToNewState(tab.id. COMMANDS.setToStop);
+              setTabToNewState(tab.id, COMMAND.setToPause.value);
             }
           });
         } else if (newVkTabs && newVkTabs.length) {
@@ -113,7 +113,7 @@ function setNewStateToLastPlayedTab(newState) {
               setTabToNewState(tab.id, newState);
             }
             else if(tab.audible){
-              setTabToNewState(tab.id. COMMANDS.setToStop);
+              setTabToNewState(tab.id, COMMAND.setToPause.value);
             }
           });
         }
@@ -124,8 +124,9 @@ function setNewStateToLastPlayedTab(newState) {
 
 function setTabToNewState(tabId, newState) {
   chrome.tabs.sendMessage(tabId, { cmd: newState }, function(response) {
-    chrome.storage.local.set({ 'lastPlayedTabId': tabId }, function() {
+    chrome.storage.local.set({ "lastPlayedTabId" : tabId }, function() {
       setAppIconState(response.state);
     });
   });
 }
+
