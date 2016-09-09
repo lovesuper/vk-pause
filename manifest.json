@@ -2,7 +2,7 @@
   "manifest_version": 2,
   "name": "VK-Pause",
   "short_name": "vk-pause",
-  "version": "0.5",
+  "version": "0.5.1",
   "offline_enabled": true,
   "icons": {
     "16": "images/icons/playing/16.png",
