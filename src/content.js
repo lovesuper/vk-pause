@@ -1,4 +1,7 @@
 // TODO: write design checker
+// TODO: triple click -- prev
+// TODO: options page
+// TODO: loading mode
 $(document).ready(function() {
   MutationObserver = window.MutationObserver || window.WebKitMutationObserver;
   var oldVkPlayBtn = document.querySelector(OLD_VK_SEL.playstop.value);
