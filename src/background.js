@@ -58,7 +58,7 @@ function nextAudioTrack() {
               if((vkTabs && vkTabs.length) ) {
                 vkTabs.forEach(function(tab) {
                   if(tab.id == result.lastPlayedTabId) {
-                    chrome.tabs.sendMessage(tab.id, { cmd: COMMAND.setToNext.value }, function(response) {
+                    chrome.tabs.sendMessage(tab.id, { cmd: COMMAND.setToNext }, function(response) {
                       setAppIconState(STATE.paused.value);
                     });
                   }
@@ -124,7 +124,9 @@ function setNewStateToLastPlayedTab(newState) {
 function setTabToNewState(tabId, newState) {
   chrome.tabs.sendMessage(tabId, { cmd: newState }, function(response) {
     chrome.storage.local.set({ "lastPlayedTabId" : tabId }, function() {
-      setAppIconState(response.state);
+      if (response) {
+        setAppIconState(response.state);
+      }
     });
   });
 }
