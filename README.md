@@ -10,6 +10,8 @@ VK-Pause is a Chrome extension with one essential target -- switching play/stop 
 
 [VK-Pause at Chrome Store](https://chrome.google.com/webstore/detail/vk-pause/pkpjbdbejhbbhnbdelfnpdbdhghfpidl)
 
-Alt+N - stop/play shortcut
-Double Alt+N - next song as is a double click on app icon
+*Alt+N* - stop/play/next (double tap) shortcut for Chrome **active state**
+*Shift+Ctrl+9* - stop/play/next (double tap) global shotrcut for **background state**
+*Double Alt+N* - next song as is a double click on app icon
+*Double Shift+Ctrl+9* - next song in background state
 

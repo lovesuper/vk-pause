@@ -3,8 +3,10 @@ chrome.browserAction.onClicked.addListener(function(tab) {
 });
 
 chrome.commands.onCommand.addListener(function(hotkey) {
-  if (hotkey == HOTKEY.main.value) {
-    appIconClicked();
+  switch (hotkey) {
+    case HOTKEY.main.value:
+    case HOTKEY.localmain.value:
+      appIconClicked();
   }
 });
 

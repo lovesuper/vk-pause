@@ -2,8 +2,7 @@
   "manifest_version": 2,
   "name": "VK-Pause",
   "short_name": "vk-pause",
-  "version": "0.5.1",
-  "offline_enabled": true,
+  "version": "0.5.2",
   "icons": {
     "16": "images/icons/playing/16.png",
     "32": "images/icons/playing/32.png",
@@ -23,10 +22,23 @@
   "commands": {
     "playstop": {
       "suggested_key": {
-        "default": "Alt+N",
-        "mac": "Alt+N"
+        "default": "Ctrl+Shift+9",
+        "mac": "Ctrl+Shift+9",
+        "windows": "Ctrl+Shift+9",
+        "linux": "Ctrl+Shift+9"
       },
-      "description": "Start/stop vk music"
+      "description": "(global) Start/stop/next(double tap) vk music",
+      "global": true
+    },
+    "localplaystop": {
+      "suggested_key": {
+        "default": "Alt+N",
+        "mac": "Alt+N",
+        "windows": "Alt+N",
+        "linux": "Alt+N"
+      },
+      "description": "(local) Start/stop/next(double tap) vk music",
+      "global": false
     }
   },
 
