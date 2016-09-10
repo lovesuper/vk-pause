@@ -1,6 +1,5 @@
 // TODO: write design checker
 // TODO: triple click -- prev
-// TODO: options page
 // TODO: loading mode
 $(document).ready(function() {
   MutationObserver = window.MutationObserver || window.WebKitMutationObserver;

@@ -9,7 +9,7 @@
     "48": "images/icons/playing/48.png",
     "128": "images/icons/playing/128.png"
   },
-
+  "options_page": "src/options.html",
   "permissions": [
     "storage",
     "tabs",
