@@ -18,8 +18,7 @@ var HOTKEY = {
 var COMMAND = {
   setToPlay: { value: "play" },
   setToPause: { value: "pause" },
-  setToNext: { value: "next" },
-  setToPrev: { value: "prev" }
+  setToNext: { value: "next" }
 }
 
 var URL = {
