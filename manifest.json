@@ -2,7 +2,7 @@
   "manifest_version": 2,
   "name": "VK-Pause",
   "short_name": "vk-pause",
-  "version": "0.5.2",
+  "version": "0.6",
   "icons": {
     "16": "images/icons/playing/16.png",
     "32": "images/icons/playing/32.png",
@@ -14,9 +14,7 @@
     "storage",
     "tabs",
     "http://vk.com/*",
-    "https://vk.com/*",
-    "http://new.vk.com/*",
-    "https://new.vk.com/*"
+    "https://vk.com/*"
   ],
 
   "commands": {
@@ -46,7 +44,7 @@
 
   "background": {
     "scripts": [
-      "lib/constants.js",
+      "src/constants.js",
       "src/background.js"
     ],
     "persistent": true
@@ -60,13 +58,10 @@
     {
       "matches": [
         "https://vk.com/*",
-        "https://new.vk.com/*",
-        "http://vk.com/*",
-        "http://new.vk.com/*"
+        "http://vk.com/*"
       ],
       "js": [
-        "lib/jquery-2.1.4.js",
-        "lib/constants.js",
+        "src/constants.js",
         "src/content.js"
       ],
       "run_at":"document_end"

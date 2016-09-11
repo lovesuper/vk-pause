@@ -1,24 +1,13 @@
 <!DOCTYPE html>
 <html>
-  <head><title>My Test Extension Options</title></head>
+  <head><title>Настройки VK Pause</title></head>
   <body>
-
-    Favorite color:
-    <select id="color">
-       <option value="red">red</option>
-        <option value="green">green</option>
-         <option value="blue">blue</option>
-          <option value="yellow">yellow</option>
-    </select>
-
     <label>
-        <input type="checkbox" id="like">
-          I like colors.
+     Интервал между кликами мыши или нажатиями горячих клавиш, мс:
+     <input type="text" id="intervalMills"><br>
     </label>
-
     <div id="status"></div>
-    <button id="save">Save</button>
-
+    <button id="save">Сохранить</button>
     <script src="options.js"></script>
   </body>
 </html>
