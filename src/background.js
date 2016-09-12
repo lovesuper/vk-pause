@@ -63,8 +63,9 @@ function performAction(action) {
 function newVkInstanceCreationCompleteListener(tabId, info, tab) {
   if(info.status == "complete" && tab.url.indexOf("vk.com") > -1) {
     chrome.storage.local.set({ "lastPlayedTabId" : tab.id }, function() {
+      console.log("on loading page START/STOP");
       performAction("playstop");
     });
-    chrome.tabs.onUpdated.removeListener(completeListener);
+    chrome.tabs.onUpdated.removeListener(newVkInstanceCreationCompleteListener);
   }
 }

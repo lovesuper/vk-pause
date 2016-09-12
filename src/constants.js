@@ -6,6 +6,7 @@ var STATE = {
 
 var SELECTORS = {
   playstop: { value: ".top_audio_player" },
+  loadingBar: { value: ".slider_loading_bar" },
   play: { value: ".top_audio_player_play" },
   next: { value: ".top_audio_player_next" }
 }
