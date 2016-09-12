@@ -61,6 +61,10 @@ function performAction(action) {
 }
 
 function newVkInstanceCreationCompleteListener(tabId, info, tab) {
+  chrome.browserAction.setTitle({"title":"Oxxxymiron - Детектор Лжи"});
+  chrome.browserAction.setBadgeText({"text":"∞"});
+  chrome.browserAction.setBadgeBackgroundColor({color: "green"});
+
   if(info.status == "complete" && tab.url.indexOf("vk.com") > -1) {
     chrome.storage.local.set({ "lastPlayedTabId" : tab.id }, function() {
       console.log("on loading page START/STOP");
