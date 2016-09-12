@@ -1,6 +1,5 @@
 (function() {
   MutationObserver = window.MutationObserver || window.WebKitMutationObserver;
-  debugger;
   var playBtn = document.querySelector(SELECTORS.playstop.value);
   if(playBtn) {
     new MutationObserver(function(mutations, observer) {
@@ -9,12 +8,12 @@
     }).observe(playBtn, { subtree: true, attributes: true });
   }
 
-  var loadingBar = document.querySelector(".audio_page_player_duration");
-  if(loadingBar) {
+  var titleBar = document.querySelector(".top_audio_player_title_wrap");
+  if(titleBar) {
     new MutationObserver(function(mutations, observer) {
-      console.log("PLAYING MUTATION");
-//      chrome.runtime.sendMessage( { "loading": true } );
-    }).observe(loadingBar, { subtree: true, attributes: true });
+      var currentTitle = mutations[0].target.innerText;
+      chrome.runtime.sendMessage( { "title": currentTitle } );
+    }).observe(titleBar, { subtree: true, attributes: true });
   }
 
 })();
