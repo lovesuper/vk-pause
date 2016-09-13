@@ -80,16 +80,18 @@ function newVkInstanceCreationCompleteListener(tabId, info, tab) {
 
   chrome.browserAction.setBadgeBackgroundColor({color: "CornflowerBlue"});
   if(info.status == "complete" && tab.url.indexOf("vk.com") > -1) {
-    chrome.storage.local.set({ "lastPlayedTabId" : tab.id }, function() {
-      performAction("playstop");
-    });
-
+    chrome.browserAction.setIcon({ path: "images/icons/" + "playing"  + "/48.png" });
+    chrome.storage.local.set({ "lastPlayedTabId" : tab.id });
     intervals.forEach(function(item){ window.clearInterval(item); })
     intervals = [];
 
     chrome.tabs.onUpdated.removeListener(newVkInstanceCreationCompleteListener);
   }
 }
+
+// chrome.tabs.onUpdated.addListener(function(tabId, info, tab) {
+//   chrome.browserAction.setIcon({ path: "images/icons/" + "playing"  + "/48.png" });
+// });
 
 chrome.tabs.onRemoved.addListener(function (tabid) {
   chrome.storage.local.get("lastPlayedTabId", function(result) {
