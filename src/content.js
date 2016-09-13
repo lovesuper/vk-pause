@@ -1,23 +1,23 @@
 (function() {
-  MutationObserver = window.MutationObserver || window.WebKitMutationObserver;
   var playButton = document.querySelector(SELECTORS.playstop.value);
+  var titleBar = document.querySelector(".top_audio_player_title_wrap");
+  
   if(playButton) {
     new MutationObserver(function(mutations, observer) {
-      var state = mutations[0].target.className.includes("top_audio_player_playing") ?
-        STATE.paused.value : STATE.playing.value;
-      console.log("go:", state);
-      chrome.runtime.sendMessage( { "state": state } );
+        var state = mutations[0].target.className.includes("top_audio_player_playing") ?
+          STATE.paused.value : STATE.playing.value;
+        console.log("go:", state);
+        chrome.runtime.sendMessage( { "state": state } );
     }).observe(playButton, { subtree: true, attributes: true });
   }
 
-  var titleBar = document.querySelector(".top_audio_player_title_wrap");
   if(titleBar) {
     new MutationObserver(function(mutations, observer) {
       var currentTitle = mutations[0].target.innerText;
+      chrome.runtime.sendMessage( { "state": "paused" } );
       chrome.runtime.sendMessage( { "title": currentTitle } );
     }).observe(titleBar, { subtree: true, attributes: true });
   }
-
 })();
 
 chrome.runtime.onMessage.addListener(function(request, sender, sendResponse) {
@@ -38,4 +38,3 @@ chrome.runtime.onMessage.addListener(function(request, sender, sendResponse) {
 
   }
 });
-
