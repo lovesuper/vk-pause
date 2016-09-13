@@ -91,3 +91,23 @@ function newVkInstanceCreationCompleteListener(tabId, info, tab) {
   }
 }
 
+chrome.tabs.onRemoved.addListener(function (tabid) {
+  chrome.storage.local.get("lastPlayedTabId", function(result) {
+    if (result.lastPlayedTabId) {
+      chrome.browserAction.setIcon({ path: "images/icons/" + "playing"  + "/48.png" });
+    }
+  });
+});
+
+
+
+
+
+
+
+
+
+
+
+
+

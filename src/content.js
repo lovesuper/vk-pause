@@ -3,8 +3,9 @@
   var playButton = document.querySelector(SELECTORS.playstop.value);
   if(playButton) {
     new MutationObserver(function(mutations, observer) {
-      state = mutations[0].target.className.includes("top_audio_player_playing") ?
+      var state = mutations[0].target.className.includes("top_audio_player_playing") ?
         STATE.paused.value : STATE.playing.value;
+      console.log("go:", state);
       chrome.runtime.sendMessage( { "state": state } );
     }).observe(playButton, { subtree: true, attributes: true });
   }
@@ -27,7 +28,14 @@ chrome.runtime.onMessage.addListener(function(request, sender, sendResponse) {
       playButton.click();
     }
   } else {
-    document.querySelector(SELECTORS[request.value].value).click();
+    var topPlayButton = document.querySelector(SELECTORS[request.value].value)
+    var bottomPlayButton = document.querySelector(".audio_page_player_ctrl")
+    if (bottomPlayButton) {
+      bottomPlayButton.click();
+    } else if (topPlayButton) {
+      topPlayButton.click();
+    }
+
   }
 });
 
