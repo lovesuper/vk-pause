@@ -59,6 +59,7 @@ function performAction(action) {
           }
           chrome.storage.local.set({ "lastPlayedTabId" : tab.id });
         } else if(tab.audible) {
+          console.log("audible!!!");
           chrome.tabs.sendMessage(tab.id, COMMAND.setToPause);
         }
       });

@@ -1,11 +1,12 @@
 (function() {
   MutationObserver = window.MutationObserver || window.WebKitMutationObserver;
-  var playBtn = document.querySelector(SELECTORS.playstop.value);
-  if(playBtn) {
+  var playButton = document.querySelector(SELECTORS.playstop.value);
+  if(playButton) {
     new MutationObserver(function(mutations, observer) {
-      state = mutations[0].target.className.includes("top_audio_player_playing") ?  STATE.paused.value : STATE.playing.value;
+      state = mutations[0].target.className.includes("top_audio_player_playing") ?
+        STATE.paused.value : STATE.playing.value;
       chrome.runtime.sendMessage( { "state": state } );
-    }).observe(playBtn, { subtree: true, attributes: true });
+    }).observe(playButton, { subtree: true, attributes: true });
   }
 
   var titleBar = document.querySelector(".top_audio_player_title_wrap");
@@ -19,5 +20,14 @@
 })();
 
 chrome.runtime.onMessage.addListener(function(request, sender, sendResponse) {
-  document.querySelector(SELECTORS[request.value].value).click();
+  if (request.value == COMMAND.setToPause.value) {
+    var playButton = document.querySelector(SELECTORS["playstop"].value);
+    var classList = playButton.classList;
+    if (classList.contains("top_audio_player_playing")) {
+      playButton.click();
+    }
+  } else {
+    document.querySelector(SELECTORS[request.value].value).click();
+  }
 });
+
