@@ -1,4 +1,3 @@
-// TODO: sync vs local storage
 var intervals = [];
 
 chrome.browserAction.onClicked.addListener(function(tab) {
@@ -59,7 +58,6 @@ function performAction(action) {
           }
           chrome.storage.local.set({ "lastPlayedTabId" : tab.id });
         } else if(tab.audible) {
-          console.log("audible!!!");
           chrome.tabs.sendMessage(tab.id, COMMAND.setToPause);
         }
       });
@@ -89,10 +87,6 @@ function newVkInstanceCreationCompleteListener(tabId, info, tab) {
   }
 }
 
-// chrome.tabs.onUpdated.addListener(function(tabId, info, tab) {
-//   chrome.browserAction.setIcon({ path: "images/icons/" + "playing"  + "/48.png" });
-// });
-
 chrome.tabs.onRemoved.addListener(function (tabid) {
   chrome.storage.local.get("lastPlayedTabId", function(result) {
     if (result.lastPlayedTabId) {
@@ -100,16 +94,3 @@ chrome.tabs.onRemoved.addListener(function (tabid) {
     }
   });
 });
-
-
-
-
-
-
-
-
-
-
-
-
-

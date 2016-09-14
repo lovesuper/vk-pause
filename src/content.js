@@ -1,12 +1,10 @@
 (function() {
   var playButton = document.querySelector(SELECTORS.playstop.value);
   var titleBar = document.querySelector(".top_audio_player_title_wrap");
-  
+
   if(playButton) {
     new MutationObserver(function(mutations, observer) {
-        var state = mutations[0].target.className.includes("top_audio_player_playing") ?
-          STATE.paused.value : STATE.playing.value;
-        console.log("go:", state);
+        var state = mutations[0].target.className.includes("top_audio_player_playing") ?  STATE.paused.value : STATE.playing.value;
         chrome.runtime.sendMessage( { "state": state } );
     }).observe(playButton, { subtree: true, attributes: true });
   }
@@ -35,6 +33,5 @@ chrome.runtime.onMessage.addListener(function(request, sender, sendResponse) {
     } else if (topPlayButton) {
       topPlayButton.click();
     }
-
   }
 });
