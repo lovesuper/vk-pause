@@ -22,12 +22,14 @@ rm src/options.min.html
 
 jq -R 'gsub("[.]js"; ".min.js")' manifest.json --raw-output > $D/manifest.json.tmp1
 jq -R 'gsub("[.]html"; ".min.html")' $D/manifest.json.tmp1 --raw-output > $D/manifest.json.tmp
-
-rm $D/manifest.json.tmp1
+jq -R 'gsub("[.]js"; ".min.js")' $D/src/options.min.html --raw-output > $D/src/options.min.html.tmp
 
 json-minify $D/manifest.json.tmp > $D/manifest.json
+cp $D/src/options.min.html.tmp $D/src/options.min.html
+rm $D/src/options.min.html.tmp
 
 rm $D/manifest.json.tmp
+rm $D/manifest.json.tmp1
 
 zip -r $D.zip $D
 
