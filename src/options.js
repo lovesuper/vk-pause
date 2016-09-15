@@ -1,6 +1,6 @@
 function save_options() {
   var intervalMills = document.getElementById('intervalMills').value;
-  chrome.storage.sync.set({
+  chrome.storage.local.set({
     "intervalMills": intervalMills
   }, function() {
     var status = document.getElementById('status');
@@ -10,9 +10,7 @@ function save_options() {
 }
 
 function restore_options() {
-  chrome.storage.sync.get({
-    "intervalMills": '250'
-  }, function(items) {
+  chrome.storage.local.get("intervalMills", function(items) {
     document.getElementById('intervalMills').value = items.intervalMills;
   });
 }
