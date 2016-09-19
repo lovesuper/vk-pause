@@ -5,7 +5,7 @@
   if(playButton) {
     new MutationObserver(function(mutations, observer) {
         var state = mutations[0].target.className.includes("top_audio_player_playing") ?  STATE.paused.value : STATE.playing.value;
-        chrome.runtime.sendMessage( { "state": state } );
+        chrome.runtime.sendMessage( { "state": state, "playButtonClicked": true} );
     }).observe(playButton, { subtree: true, attributes: true });
   }
 
@@ -28,10 +28,10 @@ chrome.runtime.onMessage.addListener(function(request, sender, sendResponse) {
   } else {
     var topPlayButton = document.querySelector(SELECTORS[request.value].value)
     var bottomPlayButton = document.querySelector(".audio_page_player_ctrl")
-    if (bottomPlayButton) {
-      bottomPlayButton.click();
-    } else if (topPlayButton) {
+    if (topPlayButton) {
       topPlayButton.click();
+    } else if (bottomPlayButton) {
+      bottomPlayButton.click();
     }
   }
 });

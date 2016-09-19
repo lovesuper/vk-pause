@@ -5,10 +5,10 @@ D=$P$V-publ
 rm -r $D
 mkdir -p $D
 
-minify src/background.js
-minify src/content.js
-minify src/constants.js
-minify src/options.js
+minify src/background.js > src/background.min.js
+minify src/content.js > src/content.min.js
+minify src/constants.js > src/constants.min.js
+minify src/options.js > src/options.min.js
 htmlmin -o src/options.min.html src/options.html
 
 find . -name '*.min.js' -o -name "*.png" | cpio -pdm $D

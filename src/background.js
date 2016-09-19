@@ -15,8 +15,9 @@ chrome.commands.onCommand.addListener(function(hotkey) {
 chrome.runtime.onMessage.addListener(function(request, sender, sendResponse) {
   if (request.title) {
     chrome.browserAction.setTitle({ "title": request.title });
-  } else {
+  } else if (request.playButtonClicked){
     chrome.storage.local.set({ "lastPlayedTabId": sender.tab.id });
+  } else {
     chrome.browserAction.setIcon({ path: "images/icons/" + request.state + "/48.png" });
   }
 });
@@ -57,8 +58,6 @@ function performAction(action) {
             chrome.tabs.sendMessage(tab.id, COMMAND.setToPlay);
           }
           chrome.storage.local.set({ "lastPlayedTabId" : tab.id });
-        } else if(tab.audible) {
-          chrome.tabs.sendMessage(tab.id, COMMAND.setToPause);
         }
       });
     });
