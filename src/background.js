@@ -1,5 +1,6 @@
 var ix = 0;
 var intervalID;
+var DEFAULT_TITLE = "Нажмите, чтобы начать использование"
 
 chrome.browserAction.onClicked.addListener(function(tab) { appIconClicked(); });
 
@@ -89,16 +90,33 @@ function newVkInstanceCreationCompleteListener(tabId, info, tab) {
   }
 }
 
+chrome.tabs.onCreated.addListener(function(tab){
+  chrome.browserAction.setTitle({ "title": DEFAULT_TITLE });
+});
+
+chrome.tabs.onUpdated.addListener(function (tabid, info, tab) {
+  if (tab.url.indexOf("vk.com") > -1) {
+    chrome.storage.local.get("lastPlayedTabId", function(result) {
+      if (!result.lastPlayedTabId) {
+        chrome.storage.local.set({ "lastPlayedTabId" : tab.id });
+      }
+    });
+  }
+});
+
 chrome.tabs.onRemoved.addListener(function (tabid) {
   chrome.storage.local.get("lastPlayedTabId", function(result) {
     window.clearInterval(intervalID);
     ix = 0;
     chrome.browserAction.setBadgeText({"text":""});
+    chrome.browserAction.setTitle({ "title": DEFAULT_TITLE });
     if (result.lastPlayedTabId) {
       chrome.tabs.query({ url: URL.vk.value}, function(tabs) {
         chrome.browserAction.setIcon({ path: "images/icons/playing/48.png" });
         if (tabs.length != 0) {
           chrome.storage.local.set({ "lastPlayedTabId" : tabs[0].id });
+        } else {
+          chrome.storage.local.set({ "lastPlayedTabId" : null });
         }
       });
     }
