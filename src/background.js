@@ -113,14 +113,14 @@ chrome.tabs.onUpdated.addListener(function (tabid, info, tab) {
 
 chrome.tabs.onRemoved.addListener(function (tabid) {
   chrome.storage.local.get("lastPlayedTabId", function(result) {
-    resetAnimationIndex();
-    chrome.browserAction.setBadgeText({"text": ""});
     if (result.lastPlayedTabId) {
       chrome.tabs.query({ url: URL.vk.value }, function(tabs) {
         chrome.browserAction.setIcon({ path: "images/icons/playing/48.png" });
         if (tabs.length != 0) {
           chrome.storage.local.set({ "lastPlayedTabId" : tabs[0].id });
         } else {
+          resetAnimationIndex();
+          chrome.browserAction.setBadgeText({"text": ""});
           chrome.storage.local.set({ "lastPlayedTabId" : null });
         }
       });
