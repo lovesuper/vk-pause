@@ -3,7 +3,7 @@
   var titleBar = document.querySelector(SELECTORS.title.value);
 
   if(playButton) {
-    new MutationObserver(function(mutations, observer) {
+    new MutationObserver(function(mutations, _) {
       if (mutations[0].target.className.includes(TRASH_MUTATOR_FLAG)) { return; }
       var className = mutations[0].target.className;
       var state = className.includes(PLAYING_FLAG) ?  STATE.paused.value : STATE.playing.value;
@@ -12,7 +12,7 @@
   }
 
   if(titleBar) {
-    new MutationObserver(function(mutations, observer) {
+    new MutationObserver(function(mutations, _) {
       chrome.runtime.sendMessage({
         "state": STATE.paused.value,
         "titleChanged": mutations[0].target.innerText
@@ -21,7 +21,7 @@
   }
 })();
 
-chrome.runtime.onMessage.addListener(function(request, sender, sendResponse) {
+chrome.runtime.onMessage.addListener(function(request, _, __) {
   switch (request.value) {
     case COMMAND.setToPause.value:
       var playButton = document.querySelector(SELECTORS.play.value);

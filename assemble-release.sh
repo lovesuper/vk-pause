@@ -6,10 +6,23 @@ D=$P$V-publ
 rm -r $D
 mkdir -p $D
 
-minify src/background.js > src/background.min.js
-minify src/content.js > src/content.min.js
-minify src/constants.js > src/constants.min.js
-minify src/options.js > src/options.min.js
+case "$1" in
+  -u)
+    echo "Minifying with unglyfing"
+    uglifyjs -c -m --screw-ie8 -- src/background.js > src/background.min.js
+    uglifyjs -c -m --screw-ie8 -- src/content.js > src/content.min.js
+    uglifyjs -c -m --screw-ie8 -- src/constants.js > src/constants.min.js
+    uglifyjs -c -m --screw-ie8 -- src/options.js > src/options.min.js
+    ;;
+  *)
+    echo "regular minifying"
+    minify src/background.js > src/background.min.js
+    minify src/content.js > src/content.min.js
+    minify src/constants.js > src/constants.min.js
+    minify src/options.js > src/options.min.js
+    ;;
+esac
+
 htmlmin -o src/options.min.html src/options.html
 
 find . -name '*.min.js' -o -name "*.png" | cpio -pdm $D

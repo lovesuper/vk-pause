@@ -2,7 +2,9 @@ var animationIndex = 0;
 var intervalID;
 var CHARS_COUNT_AT_ONE_TIME = 3;
 
-chrome.browserAction.onClicked.addListener(function(tab) { appIconClicked(); });
+chrome.browserAction.onClicked.addListener(function() {
+  appIconClicked();
+});
 
 chrome.commands.onCommand.addListener(function(hotkey) {
   switch (hotkey) {
@@ -19,7 +21,7 @@ function resetAnimationIndex() {
   chrome.browserAction.setTitle({ "title": DEFAULT_TITLE });
 }
 
-chrome.runtime.onMessage.addListener(function(request, sender, sendResponse) {
+chrome.runtime.onMessage.addListener(function(request, sender, _) {
   if (request.titleChanged) {
     resetAnimationIndex();
     chrome.browserAction.setTitle({ "title": request.titleChanged });
@@ -64,7 +66,7 @@ function appIconClicked() {
 function performAction(action) {
   chrome.tabs.query({ url: URL.vk.value }, function(tabs) {
     if (tabs.length == 0) {
-      chrome.tabs.create({ url: SSL_VK_URL, active: true, index: 0 }, function(tab) {
+      chrome.tabs.create({ url: SSL_VK_URL, active: true, index: 0 }, function() {
         chrome.tabs.onUpdated.addListener(newVkInstanceCreationCompleteListener);
       });
       return;
@@ -88,7 +90,7 @@ function performAction(action) {
   });
 }
 
-function newVkInstanceCreationCompleteListener(tabId, info, tab) {
+function newVkInstanceCreationCompleteListener(_, info, tab) {
   chrome.browserAction.setBadgeBackgroundColor({ color: "CornflowerBlue" });
   if(info.status == "complete" && tab.url.indexOf("vk.com") > -1) {
     chrome.browserAction.setIcon({ path: "images/icons/playing/48.png" });
@@ -97,11 +99,11 @@ function newVkInstanceCreationCompleteListener(tabId, info, tab) {
   }
 }
 
-chrome.tabs.onCreated.addListener(function(tab){
+chrome.tabs.onCreated.addListener(function(){
   chrome.browserAction.setTitle({ "title": DEFAULT_TITLE });
 });
 
-chrome.tabs.onUpdated.addListener(function (tabid, info, tab) {
+chrome.tabs.onUpdated.addListener(function (_, __, tab) {
   if (tab.url.indexOf("vk.com") > -1) {
     chrome.storage.local.get("lastPlayedTabId", function(result) {
       if (!result.lastPlayedTabId) {
@@ -111,7 +113,7 @@ chrome.tabs.onUpdated.addListener(function (tabid, info, tab) {
   }
 });
 
-chrome.tabs.onRemoved.addListener(function (tabid) {
+chrome.tabs.onRemoved.addListener(function () {
   chrome.storage.local.get("lastPlayedTabId", function(result) {
     if (result.lastPlayedTabId) {
       chrome.tabs.query({ url: URL.vk.value }, function(tabs) {
