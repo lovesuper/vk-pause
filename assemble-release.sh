@@ -2,6 +2,7 @@
 P=`jq -r '.short_name' manifest.json`
 V=`jq -r '.version' manifest.json`
 D=$P$V-publ
+
 rm -r $D
 mkdir -p $D
 
@@ -27,7 +28,6 @@ jq -R 'gsub("[.]js"; ".min.js")' $D/src/options.min.html --raw-output > $D/src/o
 json-minify $D/manifest.json.tmp > $D/manifest.json
 cp $D/src/options.min.html.tmp $D/src/options.min.html
 rm $D/src/options.min.html.tmp
-
 rm $D/manifest.json.tmp
 rm $D/manifest.json.tmp1
 

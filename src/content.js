@@ -1,45 +1,42 @@
 (function() {
-  var playButton = document.querySelector(".top_audio_player");
-  var titleBar = document.querySelector(".top_audio_player_title_wrap");
+  var playButton = document.querySelector(SELECTORS.playstop.value);
+  var titleBar = document.querySelector(SELECTORS.title.value);
+
   if(playButton) {
     new MutationObserver(function(mutations, observer) {
-      if (mutations[0].target.className.includes("top_audio_player_title")) {
-        return;
-      }
-      var state = mutations[0].target.className.includes("top_audio_player_playing")
-        ?  STATE.paused.value : STATE.playing.value;
+      if (mutations[0].target.className.includes(TRASH_MUTATOR_FLAG)) { return; }
+      var className = mutations[0].target.className;
+      var state = className.includes(PLAYING_FLAG) ?  STATE.paused.value : STATE.playing.value;
       chrome.runtime.sendMessage( { "state": state, "playButtonClicked": true} );
     }).observe(playButton, { subtree: true, attributes: true });
   }
 
   if(titleBar) {
     new MutationObserver(function(mutations, observer) {
-      var currentTitle = mutations[0].target.innerText;
-      chrome.runtime.sendMessage( { "state": STATE.paused.value } );
-      chrome.runtime.sendMessage( { "titleChanged": currentTitle } );
+      chrome.runtime.sendMessage({
+        "state": STATE.paused.value,
+        "titleChanged": mutations[0].target.innerText
+      });
     }).observe(titleBar, { subtree: true, attributes: true });
   }
-
 })();
 
 chrome.runtime.onMessage.addListener(function(request, sender, sendResponse) {
-  if (request.value == COMMAND.setToPause.value) {
-    var playButton = document.querySelector(".top_audio_player_play");
-    var classList = playButton.classList;
-    if (classList.contains("top_audio_player_playing")) {
-      playButton.click();
-    }
-  } else if (request.value == COMMAND.setToPlay.value) {
-    var playButton = document.querySelector(".top_audio_player_play");
-    var classList = playButton.classList;
-    if (!classList.contains("top_audio_player_playing")) {
-      playButton.click();
-    }
-  } else if (request.value == COMMAND.setToOppositeState.value) {
-    document.querySelector(".top_audio_player_play").click()
-  } else if (request.value == COMMAND.setToNext.value) {
-    document.querySelector(".top_audio_player_next").click()
+  switch (request.value) {
+    case COMMAND.setToPause.value:
+      var playButton = document.querySelector(SELECTORS.play.value);
+      if (playButton.classList.contains(PLAYING_FLAG)) { playButton.click(); }
+      break;
+    case COMMAND.setToPlay.value:
+      var playButton = document.querySelector(SELECTORS.play.value);
+      if (!playButton.classList.contains(PLAYING_FLAG)) { playButton.click(); }
+      break;
+    case COMMAND.setToOppositeState.value:
+      document.querySelector(SELECTORS.play.value).click()
+      break;
+    case COMMAND.setToNext.value:
+      document.querySelector(SELECTORS.next.value).click()
+      break;
   }
-
 });
 

@@ -1,6 +1,6 @@
-var ix = 0;
+var animationIndex = 0;
 var intervalID;
-var DEFAULT_TITLE = "Нажмите, чтобы начать использование"
+var CHARS_COUNT_AT_ONE_TIME = 3;
 
 chrome.browserAction.onClicked.addListener(function(tab) { appIconClicked(); });
 
@@ -12,21 +12,28 @@ chrome.commands.onCommand.addListener(function(hotkey) {
   }
 });
 
+function resetAnimationIndex() {
+  animationIndex = 0;
+  window.clearInterval(intervalID);
+  chrome.browserAction.setBadgeText({"text": "•"});
+  chrome.browserAction.setTitle({ "title": DEFAULT_TITLE });
+}
+
 chrome.runtime.onMessage.addListener(function(request, sender, sendResponse) {
   if (request.titleChanged) {
-    ix = 0;
-    window.clearInterval(intervalID);
-    chrome.browserAction.setBadgeText({"text":""});
+    resetAnimationIndex();
     chrome.browserAction.setTitle({ "title": request.titleChanged });
-    var arr = request.titleChanged.split("");
+    var splittedTitle = request.titleChanged.split("");
     intervalID = window.setInterval(function() {
-      var txtArr = arr.slice(ix, ix+3);
-      if (txtArr.length != 0) {
-        chrome.browserAction.setBadgeText({"text": txtArr.join("")});
-        chrome.browserAction.setBadgeBackgroundColor({color: "blue"});
-        ix += 1;
-      } else { ix = 0; }
-    }, 500);
+      var splittedTitleSlice = splittedTitle.slice(animationIndex, animationIndex + CHARS_COUNT_AT_ONE_TIME);
+      if (splittedTitleSlice.length != 0) {
+        chrome.browserAction.setBadgeText({ "text": splittedTitleSlice.join("") });
+        chrome.browserAction.setBadgeBackgroundColor({ color: "CornflowerBlue" });
+        animationIndex++;
+      } else {
+        animationIndex = 0;
+      }
+    }, 300);
   } else if (request.playButtonClicked) {
     chrome.storage.local.get("lastPlayedTabId", function(result) {
       if (result.lastPlayedTabId == sender.tab.id) {
@@ -55,7 +62,7 @@ function appIconClicked() {
 }
 
 function performAction(action) {
-  chrome.tabs.query({ url: URL.vk.value}, function(tabs) {
+  chrome.tabs.query({ url: URL.vk.value }, function(tabs) {
     if (tabs.length == 0) {
       chrome.tabs.create({ url: SSL_VK_URL, active: true, index: 0 }, function(tab) {
         chrome.tabs.onUpdated.addListener(newVkInstanceCreationCompleteListener);
@@ -82,7 +89,7 @@ function performAction(action) {
 }
 
 function newVkInstanceCreationCompleteListener(tabId, info, tab) {
-  chrome.browserAction.setBadgeBackgroundColor({color: "CornflowerBlue"});
+  chrome.browserAction.setBadgeBackgroundColor({ color: "CornflowerBlue" });
   if(info.status == "complete" && tab.url.indexOf("vk.com") > -1) {
     chrome.browserAction.setIcon({ path: "images/icons/playing/48.png" });
     chrome.storage.local.set({ "lastPlayedTabId" : tab.id });
@@ -106,12 +113,10 @@ chrome.tabs.onUpdated.addListener(function (tabid, info, tab) {
 
 chrome.tabs.onRemoved.addListener(function (tabid) {
   chrome.storage.local.get("lastPlayedTabId", function(result) {
-    window.clearInterval(intervalID);
-    ix = 0;
-    chrome.browserAction.setBadgeText({"text":""});
-    chrome.browserAction.setTitle({ "title": DEFAULT_TITLE });
+    resetAnimationIndex();
+    chrome.browserAction.setBadgeText({"text": ""});
     if (result.lastPlayedTabId) {
-      chrome.tabs.query({ url: URL.vk.value}, function(tabs) {
+      chrome.tabs.query({ url: URL.vk.value }, function(tabs) {
         chrome.browserAction.setIcon({ path: "images/icons/playing/48.png" });
         if (tabs.length != 0) {
           chrome.storage.local.set({ "lastPlayedTabId" : tabs[0].id });
@@ -122,3 +127,4 @@ chrome.tabs.onRemoved.addListener(function (tabid) {
     }
   });
 });
+

@@ -1,7 +1,7 @@
 # VK-Pause
 ![VK-Pause picture1][picture1]
 
-VK-Pause is a Chrome extension with one essential target -- switching play/stop state of music playing with vk.com
+VK-Pause is a Chrome extension with one essential target -- switching play/stop/playnext state of music playing with vk.com
 
 ![VK-Pause picture2][picture2]
 
