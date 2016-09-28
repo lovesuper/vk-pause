@@ -24,6 +24,14 @@ function resetAnimationIndex() {
 chrome.runtime.onMessage.addListener(function(request, sender, _) {
   if (request.titleChanged) {
     resetAnimationIndex();
+    var options = {
+      type: "basic",
+      title: "Сейчас проигрывается",
+      message: request.titleChanged,
+      iconUrl: "images/icons/playing/48.png",
+    };
+
+    chrome.notifications.create("myNotifications", options, function() { });
     chrome.browserAction.setTitle({ "title": request.titleChanged });
     var splittedTitle = request.titleChanged.split("");
     intervalID = window.setInterval(function() {
