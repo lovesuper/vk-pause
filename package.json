@@ -1,0 +1,14 @@
+{
+  "name": "vk-pause",
+  "devDependencies": {
+    "jshint": "latest",
+    "jq": "1.5",
+    "minify": "2.0.11",
+    "uglifyjs": "2.7.3",
+    "html-minifier": "3.0.3"
+  },
+  "scripts": {
+    "lint": "jshint **.js",
+    "assembling": "./assemble-release.sh"
+  }
+}

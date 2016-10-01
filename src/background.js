@@ -22,6 +22,7 @@ function resetAnimationIndex() {
 }
 
 chrome.runtime.onMessage.addListener(function(request, sender, _) {
+  chrome.storage.local.set({ "lastPlayedTabId" : sender.tab.id });
   if (request.titleChanged) {
     resetAnimationIndex();
     var options = {
@@ -31,7 +32,7 @@ chrome.runtime.onMessage.addListener(function(request, sender, _) {
       iconUrl: "images/icons/playing/48.png",
     };
 
-    chrome.notifications.create("myNotifications", options, function() { });
+    chrome.notifications.create("newSongNotification", options, function() { });
     chrome.browserAction.setTitle({ "title": request.titleChanged });
     var splittedTitle = request.titleChanged.split("");
     intervalID = window.setInterval(function() {
@@ -102,7 +103,7 @@ function newVkInstanceCreationCompleteListener(_, info, tab) {
   chrome.browserAction.setBadgeBackgroundColor({ color: "CornflowerBlue" });
   if(info.status == "complete" && tab.url.indexOf("vk.com") > -1) {
     chrome.browserAction.setIcon({ path: "images/icons/playing/48.png" });
-    chrome.storage.local.set({ "lastPlayedTabId" : tab.id });
+    //chrome.storage.local.set({ "lastPlayedTabId" : tab.id });
     chrome.tabs.onUpdated.removeListener(newVkInstanceCreationCompleteListener);
   }
 }
